@@ -5,9 +5,16 @@ namespace Night\Component\Bootstrap;
 
 class Bootstrap
 {
-    public function __construct()
+    const PRODUCTION_ENVIRONMENT = 'prod';
+    const DEVELOPMENT_ENVIRONMENT = 'dev';
+
+    private $currentEnvironment;
+    private $configurationsDirectory;
+
+    public function __construct($environment, $configurationsDirectory)
     {
-        echo "We are in :D\n";
+        $this->currentEnvironment = $environment;
+        $this->configurationsDirectory = $configurationsDirectory;
     }
 }
 
