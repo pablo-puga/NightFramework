@@ -2,6 +2,7 @@
 
 namespace Night\Component\Bootstrap;
 
+use Night\Component\FileParser\YAMLParser;
 use Night\Component\Routing\RouteControllerInformation;
 use Night\Component\Routing\Routing;
 use Symfony\Component\Yaml\Yaml;
@@ -23,7 +24,18 @@ class Bootstrap
 
     public function __invoke($route)
     {
-        $fileParser = new Yaml();
+        switch ($this->generalConfigurations['configurationsFileExtension']) {
+            case self::NIGHT_PHP_FILE_EXTENSION:
+                $fileParser = null;
+                break;
+            case self::NIGHT_JSON_FILE_EXTENSION:
+                $fileParser = null;
+                break;
+            case self::NIGHT_YAML_FILE_EXTENSION:
+            default:
+                $fileParser = new YAMLParser(new Yaml());
+        }
+
         $routing    = new Routing($this->generalConfigurations['configurationsDirectory'], $fileParser);
 
         $routeControllerInformation = $routing->parseRoute($route);

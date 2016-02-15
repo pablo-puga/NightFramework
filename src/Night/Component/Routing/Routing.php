@@ -2,13 +2,14 @@
 
 namespace Night\Component\Routing;
 
+use Night\Component\FileParser\FileParser;
 
 class Routing
 {
     private $routingFile;
     private $fileParser;
 
-    public function __construct($configurationsDirectory, $fileParser)
+    public function __construct($configurationsDirectory, FileParser $fileParser)
     {
         $this->routingFile = $configurationsDirectory . '/routing.yml';
         $this->fileParser  = $fileParser;
@@ -16,7 +17,7 @@ class Routing
 
     public function parseRoute($route)
     {
-        $fileContents = $this->fileParser->parse(file_get_contents($this->routingFile));
+        $fileContents = $this->fileParser->parseFile($this->routingFile);
         foreach ($fileContents as $routeEntry) {
             if ($routeEntry['route'] == $route) {
                 $className                  = $routeEntry['path']['classname'];
