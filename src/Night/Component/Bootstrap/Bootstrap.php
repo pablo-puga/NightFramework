@@ -25,8 +25,8 @@ class Bootstrap
         $routing = new Routing($this->configurationsDirectory, $fileParser);
         $controllerInfo = $routing->parseRoute($route);
 
-        $controller = new $controllerInfo['namespace']();
-        $controller->{$controllerInfo['method']}();
+        $controller = new $controllerInfo['classname']();
+        $controller->{$controllerInfo['callablemethod']}();
     }
 }
 
