@@ -2,8 +2,8 @@
 
 namespace Night\Component\Bootstrap;
 
-
 use Night\Component\Routing\Routing;
+use Symfony\Component\Yaml\Yaml;
 
 class Bootstrap
 {
@@ -12,18 +12,17 @@ class Bootstrap
 
     private $currentEnvironment;
     private $configurationsDirectory;
-    private $fileParser;
 
-    public function __construct($environment, $configurationsDirectory, $fileParser)
+    public function __construct($environment, $configurationsDirectory)
     {
         $this->currentEnvironment      = $environment;
         $this->configurationsDirectory = $configurationsDirectory;
-        $this->fileParser              = $fileParser;
     }
 
     public function __invoke($route)
     {
-        $routing = new Routing($this->configurationsDirectory, $this->fileParser);
+        $fileParser = new Yaml();
+        $routing = new Routing($this->configurationsDirectory, $fileParser);
         $controllerInfo = $routing->parseRoute($route);
 
         $controller = new $controllerInfo['namespace']();
