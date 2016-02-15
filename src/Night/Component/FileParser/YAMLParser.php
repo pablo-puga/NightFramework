@@ -15,7 +15,7 @@ class YAMLParser implements FileParser
     public function parseFile($pathToFile)
     {
         $fileContents = file_get_contents($pathToFile);
-        $parsedFile = $this->yaml->parse($fileContents);
+        $parsedFile   = $this->yaml->parse($fileContents);
 
         return $parsedFile;
     }
