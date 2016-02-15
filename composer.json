@@ -1,0 +1,17 @@
+{
+  "name": "pablo-puga/Night",
+  "description": "MPWAR Framework",
+  "license": "Apache-2.0",
+  "keywords": [],
+  "homepage": "https://github.com/pablo-puga/NightFramework",
+  "type": "project",
+  "require": {
+    "php": "^5.6"
+  },
+  "minimun-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "Night\\": "src/Night/"
+    }
+  }
+}
