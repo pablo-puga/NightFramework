@@ -22,11 +22,14 @@ class Bootstrap
     public function __invoke($route)
     {
         $fileParser = new Yaml();
-        $routing = new Routing($this->configurationsDirectory, $fileParser);
-        $controllerInfo = $routing->parseRoute($route);
+        $routing    = new Routing($this->configurationsDirectory, $fileParser);
 
-        $controller = new $controllerInfo['classname']();
-        $controller->{$controllerInfo['callablemethod']}();
+        $routeControllerInformation = $routing->parseRoute($route);
+        $controllerClassName        = $routeControllerInformation->getClassName();
+        $controllerCallableMethod   = $routeControllerInformation->getCallableMethod();
+
+        $controller = new $controllerClassName();
+        $controller->{$controllerCallableMethod}();
     }
 }
 

@@ -17,10 +17,19 @@ class Routing
     public function parseRoute($route)
     {
         $fileContents = $this->fileParser->parse(file_get_contents($this->routingFile));
-        foreach($fileContents as $routeEntry) {
-            if ($routeEntry['route'] == $route) return $routeEntry['path'];
+        foreach ($fileContents as $routeEntry) {
+            if ($routeEntry['route'] == $route) {
+                $className                  = $routeEntry['path']['classname'];
+                $callableMethod             = $routeEntry['path']['callablemethod'];
+                $routeControllerInformation = new RouteControllerInformation($className, $callableMethod);
+                return $routeControllerInformation;
+            }
         }
-        return $fileContents['notfound']['path'];
+        $notFoundClassName                  = $fileContents['notfound']['path']['classname'];
+        $notFoundCallableMethod             = $fileContents['notfound']['path']['callablemethod'];
+        $notFoundRouteControllerInformation = new RouteControllerInformation($notFoundClassName, $notFoundCallableMethod);
+
+        return $notFoundRouteControllerInformation;
     }
 }
 
