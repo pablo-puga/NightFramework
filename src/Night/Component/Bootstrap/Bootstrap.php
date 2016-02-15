@@ -2,6 +2,7 @@
 
 namespace Night\Component\Bootstrap;
 
+use Night\Component\Routing\RouteControllerInformation;
 use Night\Component\Routing\Routing;
 use Symfony\Component\Yaml\Yaml;
 
@@ -25,8 +26,13 @@ class Bootstrap
         $routing    = new Routing($this->configurationsDirectory, $fileParser);
 
         $routeControllerInformation = $routing->parseRoute($route);
-        $controllerClassName        = $routeControllerInformation->getClassName();
-        $controllerCallableMethod   = $routeControllerInformation->getCallableMethod();
+        $this->invokeController($routeControllerInformation);
+    }
+
+    private function invokeController(RouteControllerInformation $routeControllerInformation)
+    {
+        $controllerClassName      = $routeControllerInformation->getClassName();
+        $controllerCallableMethod = $routeControllerInformation->getCallableMethod();
 
         $controller = new $controllerClassName();
         $controller->{$controllerCallableMethod}();
