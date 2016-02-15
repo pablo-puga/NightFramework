@@ -10,20 +10,21 @@ class Bootstrap
 {
     const NIGHT_PRODUCTION_ENVIRONMENT = 'prod';
     const NIGHT_DEVELOPMENT_ENVIRONMENT = 'dev';
+    const NIGHT_YAML_FILE_EXTENSION = 'yml';
+    const NIGHT_PHP_FILE_EXTENSION = 'php';
+    const NIGHT_JSON_FILE_EXTENSION = 'json';
 
-    private $currentEnvironment;
-    private $configurationsDirectory;
+    private $generalConfigurations;
 
-    public function __construct($environment, $configurationsDirectory)
+    public function __construct(Array $generalConfigurations)
     {
-        $this->currentEnvironment      = $environment;
-        $this->configurationsDirectory = $configurationsDirectory;
+        $this->generalConfigurations = $generalConfigurations;
     }
 
     public function __invoke($route)
     {
         $fileParser = new Yaml();
-        $routing    = new Routing($this->configurationsDirectory, $fileParser);
+        $routing    = new Routing($this->generalConfigurations['configurationsDirectory'], $fileParser);
 
         $routeControllerInformation = $routing->parseRoute($route);
         $this->invokeController($routeControllerInformation);
