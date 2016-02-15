@@ -5,8 +5,8 @@ namespace Night\Component\Bootstrap;
 
 class Bootstrap
 {
-    const PRODUCTION_ENVIRONMENT = 'prod';
-    const DEVELOPMENT_ENVIRONMENT = 'dev';
+    const NIGHT_PRODUCTION_ENVIRONMENT = 'prod';
+    const NIGHT_DEVELOPMENT_ENVIRONMENT = 'dev';
 
     private $currentEnvironment;
     private $configurationsDirectory;
