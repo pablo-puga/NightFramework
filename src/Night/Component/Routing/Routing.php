@@ -20,7 +20,7 @@ class Routing
         foreach($fileContents as $routeEntry) {
             if ($routeEntry['route'] == $route) return $routeEntry['path'];
         }
-        return false;
+        return $fileContents['notfound']['path'];
     }
 }
 
