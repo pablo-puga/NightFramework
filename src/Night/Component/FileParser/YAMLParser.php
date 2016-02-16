@@ -5,6 +5,8 @@ namespace Night\Component\FileParser;
 
 class YAMLParser implements FileParser
 {
+    const FILE_EXTENSION = 'yml';
+
     private $yaml;
 
     public function __construct($yamlParser)
