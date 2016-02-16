@@ -9,9 +9,9 @@ class Routing
     private $routingFile;
     private $fileParser;
 
-    public function __construct($configurationsDirectory, FileParser $fileParser)
+    public function __construct($configurationsDirectory, $configurationsFileExtension, FileParser $fileParser)
     {
-        $this->routingFile = $configurationsDirectory . '/routing.yml';
+        $this->routingFile = $configurationsDirectory . '/routing.' . $configurationsFileExtension;
         $this->fileParser  = $fileParser;
     }
 
