@@ -3,6 +3,7 @@
 namespace Night\Component\Routing;
 
 use Night\Component\FileParser\FileParser;
+use Night\Component\Request\Request;
 
 class Routing
 {
@@ -15,11 +16,11 @@ class Routing
         $this->fileParser  = $fileParser;
     }
 
-    public function parseRoute($route)
+    public function parseRoute(Request $request)
     {
         $fileContents = $this->fileParser->parseFile($this->routingFile);
         foreach ($fileContents as $routeEntry) {
-            if ($routeEntry['route'] == $route) {
+            if ($routeEntry['route'] == $request->getRequestUri()) {
                 $className                  = $routeEntry['path']['classname'];
                 $callableMethod             = $routeEntry['path']['callablemethod'];
                 $routeControllerInformation = new RouteControllerInformation($className, $callableMethod);

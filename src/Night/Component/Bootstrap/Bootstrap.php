@@ -4,6 +4,7 @@ namespace Night\Component\Bootstrap;
 
 use Night\Component\FileParser\YAMLParser;
 use Night\Component\FileParser\JSONParser;
+use Night\Component\Request\Request;
 use Night\Component\Routing\RouteControllerInformation;
 use Night\Component\Routing\Routing;
 use Symfony\Component\Yaml\Yaml;
@@ -20,7 +21,7 @@ class Bootstrap
         $this->generalConfigurations = $generalConfigurations;
     }
 
-    public function __invoke($route)
+    public function __invoke(Request $request)
     {
         switch ($this->generalConfigurations['configurationsFileExtension']) {
             case JSONParser::FILE_EXTENSION:
@@ -35,7 +36,7 @@ class Bootstrap
         $configurationsFileExtension = $this->generalConfigurations['configurationsFileExtension'];
         $routing                     = new Routing($configurationsDirectory, $configurationsFileExtension, $fileParser);
 
-        $routeControllerInformation = $routing->parseRoute($route);
+        $routeControllerInformation = $routing->parseRoute($request);
         $this->invokeController($routeControllerInformation);
     }
 
