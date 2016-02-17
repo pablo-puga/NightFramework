@@ -7,35 +7,60 @@ use Night\Component\Response\Exception\InvalidRedirectCode;
 
 abstract class Response
 {
-    const MOVED_PERMANENTLY = 301;
-    const SEE_OTHER = 303;
-    const TEMPORARY_REDIRECT = 307;
+    const MOVED_PERMANENTLY_CODE = 301;
+    const SEE_OTHER_CODE = 303;
+    const TEMPORARY_REDIRECT_CODE = 307;
 
     protected $headers = array();
+    protected $content;
 
     protected function setContentType($contentType)
     {
         $this->headers['Content-type:'] = $contentType;
     }
 
-    protected function setResponseStatus($status, $message)
+    public function setResponseStatus($status, $message)
     {
         $this->headers['HTTP/1.1'] = "$status $message";
     }
 
-    protected function redirect($destinationURL, $redirectCode)
+    public function redirect($destinationURL, $redirectCode)
     {
         switch ($redirectCode) {
-            case self::MOVED_PERMANENTLY:
+            case self::MOVED_PERMANENTLY_CODE:
+                $message = 'Moved Permanently';
                 break;
-            case self::SEE_OTHER:
+            case self::SEE_OTHER_CODE:
+                $message = 'See Other';
                 break;
-            case self::TEMPORARY_REDIRECT:
+            case self::TEMPORARY_REDIRECT_CODE:
+                $message = 'Temporary Redirect';
                 break;
             default:
                 InvalidRedirectCode::throwDefault($redirectCode);
         }
+        $this->setResponseStatus($redirectCode, $message);
         $this->headers['Location:'] = $destinationURL;
+    }
+
+    public function setCustomHeader($headerName, $headerValue)
+    {
+        $this->headers["$headerName:"] = $headerValue;
+    }
+
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    public function setContent($responseContent)
+    {
+        $this->content = $responseContent;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
     }
 }
 
