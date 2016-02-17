@@ -20,7 +20,7 @@ class Request
         $this->post    = new Post($post);
     }
 
-    public static function newDefault()
+    public static function newFromGlobals()
     {
         session_start();
         return new self($_SERVER, $_SESSION, $_COOKIE, $_GET, $_POST);
