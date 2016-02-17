@@ -3,6 +3,8 @@
 namespace Night\Component\Response;
 
 
+use Night\Component\Response\Exception\InvalidRedirectCode;
+
 abstract class Response
 {
     const MOVED_PERMANENTLY = 301;
@@ -31,7 +33,7 @@ abstract class Response
             case self::TEMPORARY_REDIRECT:
                 break;
             default:
-
+                InvalidRedirectCode::throwDefault($redirectCode);
         }
         $this->headers['Location:'] = $destinationURL;
     }
