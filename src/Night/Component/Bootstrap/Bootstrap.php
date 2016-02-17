@@ -22,28 +22,6 @@ class Bootstrap
 
     public function __invoke($route)
     {
-        switch($this->generalConfigurations['environment']) {
-            case self::NIGHT_DEVELOPMENT_ENVIRONMENT:
-                $this->execDevelopmentEnvironment($route);
-                break;
-            case self::NIGHT_PRODUCTION_ENVIRONMENT:
-            default:
-                $this->execProductionEnvironment($route);
-        }
-    }
-
-    private function execProductionEnvironment($route)
-    {
-        $this->exec($route);
-    }
-
-    private function execDevelopmentEnvironment($route)
-    {
-        $this->exec($route);
-    }
-
-    private function exec($route)
-    {
         switch ($this->generalConfigurations['configurationsFileExtension']) {
             case JSONParser::FILE_EXTENSION:
                 $fileParser = new JSONParser();
