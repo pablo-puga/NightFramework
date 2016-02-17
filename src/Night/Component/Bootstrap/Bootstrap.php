@@ -22,6 +22,10 @@ class Bootstrap
         $this->generalConfigurations = $generalConfigurations;
     }
 
+    /**
+     * @param \Night\Component\Request\Request $request
+     * @return \Night\Component\Response\Response
+     */
     public function __invoke(Request $request)
     {
         switch ($this->generalConfigurations['configurationsFileExtension']) {
@@ -41,16 +45,14 @@ class Bootstrap
         $routing                     = new Routing($configurationsDirectory, $configurationsFileExtension, $fileParser);
 
         $routeControllerInformation = $routing->parseRoute($request);
-        $this->invokeController($routeControllerInformation);
-    }
 
-    private function invokeController(RouteControllerInformation $routeControllerInformation)
-    {
         $controllerClassName      = $routeControllerInformation->getClassName();
         $controllerCallableMethod = $routeControllerInformation->getCallableMethod();
 
         $controller = new $controllerClassName();
-        $controller->{$controllerCallableMethod}();
+        $response = $controller->{$controllerCallableMethod}($request);
+
+        return $response;
     }
 }
 
