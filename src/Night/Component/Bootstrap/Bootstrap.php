@@ -2,6 +2,7 @@
 
 namespace Night\Component\Bootstrap;
 
+use Night\Component\FileParser\PHPParser;
 use Night\Component\FileParser\YAMLParser;
 use Night\Component\FileParser\JSONParser;
 use Night\Component\Request\Request;
@@ -24,6 +25,9 @@ class Bootstrap
     public function __invoke(Request $request)
     {
         switch ($this->generalConfigurations['configurationsFileExtension']) {
+            case PHPParser::FILE_EXTENSION:
+                $fileParser = new PHPParser();
+                break;
             case JSONParser::FILE_EXTENSION:
                 $fileParser = new JSONParser();
                 break;
