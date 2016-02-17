@@ -14,9 +14,9 @@ abstract class Response
     protected $headers = array();
     protected $content;
 
-    protected function setContentType($contentType)
+    public function setContentType($contentType)
     {
-        $this->headers['Content-type:'] = $contentType;
+        $this->headers['Content-type'] = $contentType;
     }
 
     public function setResponseStatus($status, $message)
@@ -40,7 +40,7 @@ abstract class Response
                 InvalidRedirectCode::throwDefault($redirectCode);
         }
         $this->setResponseStatus($redirectCode, $message);
-        $this->headers['Location:'] = $destinationURL;
+        $this->headers['Location'] = $destinationURL;
     }
 
     public function setCustomHeader($headerName, $headerValue)
