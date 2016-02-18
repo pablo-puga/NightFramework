@@ -1,6 +1,6 @@
 <?php
 
-namespace Night\Component\Request;
+namespace Night\Component\Request\Exception;
 
 
 class InvalidRequestParam extends \InvalidArgumentException
