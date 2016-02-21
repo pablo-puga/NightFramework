@@ -7,6 +7,7 @@ use Night\Component\FileParser\FileParserFactory;
 use Night\Component\Request\Request;
 use Night\Component\Routing\Routing;
 use Night\Component\Templating\Exception\UnknownTemplatingEngine;
+use Night\Component\Templating\SmartyTemplating;
 use Night\Component\Templating\TwigTemplating;
 
 class Bootstrap
@@ -40,7 +41,7 @@ class Bootstrap
             $this->setControllerServices($controller);
         }
 
-        $response   = $controller->{$controllerCallableMethod}($request);
+        $response = $controller->{$controllerCallableMethod}($request);
 
         return $response;
     }
@@ -58,8 +59,13 @@ class Bootstrap
                 $twig        = new \Twig_Environment($twig_loader);
                 $templating  = new TwigTemplating($twig);
                 break;
+            case SmartyTemplating::ENGINE:
+                $smarty = new \Smarty();
+                $smarty->setTemplateDir($this->generalConfigurations['templating']['templatesDirectory']);
+                $templating = new SmartyTemplating($smarty);
+                break;
             default:
-                UnknownTemplatingEngine::throwDefault($engine);
+                UnknownTemplatingEngine::throwDefault($this->generalConfigurations['templating']['engine']);
                 break;
         }
 
