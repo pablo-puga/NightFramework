@@ -2,19 +2,18 @@
 
 namespace Night\Component\Bootstrap;
 
-use Night\Component\FileParser\PHPParser;
-use Night\Component\FileParser\YAMLParser;
-use Night\Component\FileParser\JSONParser;
+use Night\Component\Controller\NightController;
+use Night\Component\FileParser\FileParserFactory;
 use Night\Component\Request\Request;
-use Night\Component\Routing\RouteControllerInformation;
 use Night\Component\Routing\Routing;
-use Symfony\Component\Yaml\Yaml;
+use Night\Component\Templating\Exception\UnknownTemplatingEngine;
+use Night\Component\Templating\TwigTemplating;
 
 class Bootstrap
 {
     const NIGHT_PRODUCTION_ENVIRONMENT = 'prod';
     const NIGHT_DEVELOPMENT_ENVIRONMENT = 'dev';
-    
+
     private $generalConfigurations;
 
     public function __construct(Array $generalConfigurations)
@@ -22,23 +21,9 @@ class Bootstrap
         $this->generalConfigurations = $generalConfigurations;
     }
 
-    /**
-     * @param \Night\Component\Request\Request $request
-     * @return \Night\Component\Response\Response
-     */
     public function __invoke(Request $request)
     {
-        switch ($this->generalConfigurations['configurationsFileExtension']) {
-            case PHPParser::FILE_EXTENSION:
-                $fileParser = new PHPParser();
-                break;
-            case JSONParser::FILE_EXTENSION:
-                $fileParser = new JSONParser();
-                break;
-            case YAMLParser::FILE_EXTENSION:
-            default:
-                $fileParser = new YAMLParser(new Yaml());
-        }
+        $fileParser = FileParserFactory::getParser($this->generalConfigurations['configurationsFileExtension']);
 
         $configurationsDirectory     = $this->generalConfigurations['configurationsDirectory'];
         $configurationsFileExtension = $this->generalConfigurations['configurationsFileExtension'];
@@ -50,9 +35,36 @@ class Bootstrap
         $controllerCallableMethod = $routeControllerInformation->getCallableMethod();
 
         $controller = new $controllerClassName();
-        $response = $controller->{$controllerCallableMethod}($request);
+
+        if ($this->controllerIsChildOfNightController($controller)) {
+            $this->setControllerServices($controller);
+        }
+
+        $response   = $controller->{$controllerCallableMethod}($request);
 
         return $response;
+    }
+
+    private function controllerIsChildOfNightController($controller)
+    {
+        return is_subclass_of($controller, 'Night\Component\Controller\NightController');
+    }
+
+    private function setControllerServices(NightController $controller)
+    {
+        switch ($this->generalConfigurations['templating']['engine']) {
+            case TwigTemplating::ENGINE:
+                $twig_loader = new \Twig_Loader_Filesystem($this->generalConfigurations['templating']['templatesDirectory']);
+                $twig        = new \Twig_Environment($twig_loader);
+                $templating  = new TwigTemplating($twig);
+                break;
+            default:
+                UnknownTemplatingEngine::throwDefault($engine);
+                break;
+        }
+
+        $controller->setTemplating($templating);
+
     }
 }
 
