@@ -48,19 +48,27 @@ abstract class Response
         $this->headers["$headerName:"] = $headerValue;
     }
 
-    public function getHeaders()
-    {
-        return $this->headers;
-    }
-
     public function setContent($responseContent)
     {
         $this->content = $responseContent;
     }
 
-    public function getContent()
+    private function sendHeaders()
     {
-        return $this->content;
+        foreach($this->headers as $header => $value) {
+            header("$header: $value");
+        }
+    }
+
+    private function sendContent()
+    {
+        echo $this->content;
+    }
+
+    public function send()
+    {
+        $this->sendHeaders();
+        $this->sendContent();
     }
 }
 
