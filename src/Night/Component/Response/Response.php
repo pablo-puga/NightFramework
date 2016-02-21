@@ -5,13 +5,14 @@ namespace Night\Component\Response;
 
 use Night\Component\Response\Exception\InvalidRedirectCode;
 
-abstract class Response
+class Response
 {
     const MOVED_PERMANENTLY_CODE = 301;
     const SEE_OTHER_CODE = 303;
     const TEMPORARY_REDIRECT_CODE = 307;
 
     protected $headers = array();
+    protected $status;
     protected $content;
 
     public function setContentType($contentType)
@@ -21,7 +22,7 @@ abstract class Response
 
     public function setResponseStatus($status, $message)
     {
-        $this->headers['HTTP/1.1'] = "$status $message";
+        $this->status = "HTTP/1.1 $status $message";
     }
 
     public function redirect($destinationURL, $redirectCode)
@@ -58,6 +59,7 @@ abstract class Response
         foreach($this->headers as $header => $value) {
             header("$header: $value");
         }
+        header($this->status);
     }
 
     private function sendContent()
