@@ -17,6 +17,10 @@ class Bootstrap
 
     private $generalConfigurations;
 
+    const REQUEST_PARAM_NAME = 'request';
+
+    const REQUEST_CLASS_NAME = 'Night\Component\Request\Request';
+
     public function __construct(Array $generalConfigurations)
     {
         $this->generalConfigurations = $generalConfigurations;
@@ -41,7 +45,11 @@ class Bootstrap
             $this->setControllerServices($controller);
         }
 
-        $response = $controller->{$controllerCallableMethod}($request);
+        if ($this->controllerNeedsRequest($controllerClassName, $controllerCallableMethod)) {
+            $response = $controller->{$controllerCallableMethod}($request);
+        } else {
+            $response = $controller->{$controllerCallableMethod}();
+        }
 
         return $response;
     }
@@ -71,6 +79,19 @@ class Bootstrap
 
         $controller->setTemplating($templating);
 
+    }
+
+    private function controllerNeedsRequest($controllerClassName, $controllerCallableMethod)
+    {
+        $reflectionClass = new \ReflectionClass($controllerClassName);
+
+        foreach ($reflectionClass->getMethod($controllerCallableMethod)->getParameters() as $param) {
+            if ($param->name == self::REQUEST_PARAM_NAME && $param->getClass()->name == self::REQUEST_CLASS_NAME) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 
