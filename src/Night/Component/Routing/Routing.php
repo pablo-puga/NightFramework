@@ -53,14 +53,6 @@ class Routing
             }
         }
 
-        /*foreach ($fileContents as $routeEntry) {
-            if ($routeEntry['route'] == $request->getRequestUri()) {
-                $className                  = $routeEntry['path']['classname'];
-                $callableMethod             = $routeEntry['path']['callablemethod'];
-                $routeControllerInformation = new RouteControllerInformation($className, $callableMethod);
-                return $routeControllerInformation;
-            }
-        }*/
         $notFoundClassName                  = $fileContents['notfound']['path']['classname'];
         $notFoundCallableMethod             = $fileContents['notfound']['path']['callablemethod'];
         $notFoundRouteControllerInformation = new RouteControllerInformation($notFoundClassName,
