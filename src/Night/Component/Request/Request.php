@@ -10,6 +10,7 @@ class Request
     public $cookie;
     public $get;
     public $post;
+    public $route;
 
     private function __construct(Array $server, Array $session, Array $cookie, Array $get, Array $post)
     {
