@@ -8,18 +8,16 @@ use Night\Component\Request\Route;
 
 class Routing
 {
-    private $routingFile;
     private $fileParser;
 
-    public function __construct($configurationsDirectory, $configurationsFileExtension, FileParser $fileParser)
+    public function __construct(FileParser $fileParser)
     {
-        $this->routingFile = $configurationsDirectory . '/routing.' . $configurationsFileExtension;
         $this->fileParser  = $fileParser;
     }
 
-    public function parseRoute(Request $request)
+    public function parseRoute(Request $request, $routingFile)
     {
-        $fileContents    = $this->fileParser->parseFile($this->routingFile);
+        $fileContents    = $this->fileParser->parseFile($routingFile);
         $routeParameters = [];
         $explodedRoute   = array_slice(explode('/', $request->getRequestUri()), 1);
 
