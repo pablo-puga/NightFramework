@@ -32,9 +32,10 @@ class Bootstrap
 
         $configurationsDirectory     = $this->generalConfigurations['configurationsDirectory'];
         $configurationsFileExtension = $this->generalConfigurations['configurationsFileExtension'];
-        $routing                     = new Routing($configurationsDirectory, $configurationsFileExtension, $fileParser);
+        $routingFile                 = $configurationsDirectory . '/routing.' . $configurationsFileExtension;
+        $routing                     = new Routing($fileParser);
 
-        $routeControllerInformation = $routing->parseRoute($request);
+        $routeControllerInformation = $routing->parseRoute($request, $routingFile);
 
         $controllerClassName      = $routeControllerInformation->getClassName();
         $controllerCallableMethod = $routeControllerInformation->getCallableMethod();
