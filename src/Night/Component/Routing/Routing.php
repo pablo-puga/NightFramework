@@ -24,7 +24,7 @@ class Routing
         $explodedRoute   = array_slice(explode('/', $request->getRequestUri()), 1);
 
         foreach ($fileContents as $routeEntry) {
-            $routeDefinition = $routeEntry['route'];
+            $routeDefinition    = $routeEntry['route'];
             $explodedDefinition = array_slice(explode('/', $routeDefinition), 1);
             if (count($explodedRoute) != count($explodedDefinition)) {
                 continue;
@@ -33,18 +33,18 @@ class Routing
                 continue;
             }
             $isParam = false;
-            for ($i = 0; $i < count($explodedDefinition); $i++) {
-                if ((strpos($explodedDefinition[$i], '{') !== false && strpos($explodedDefinition[$i], '}') !== false) || $isParam) {
+            for ($elementIterator = 0; $elementIterator < count($explodedDefinition); $elementIterator++) {
+                if ($this->definitionElementIsParameter($explodedDefinition[$elementIterator]) || $isParam) {
                     $isParam                     = true;
-                    $paramName                   = str_replace(['{', '}'], '', $explodedDefinition[$i]);
-                    $routeParameters[$paramName] = $explodedRoute[$i];
+                    $paramName                   = str_replace(['{', '}'], '', $explodedDefinition[$elementIterator]);
+                    $routeParameters[$paramName] = $explodedRoute[$elementIterator];
                 } else {
-                    if ($explodedDefinition[$i] != $explodedRoute[$i]) {
+                    if ($explodedDefinition[$elementIterator] != $explodedRoute[$elementIterator]) {
                         break;
                     }
                 }
-                if ($i == count($explodedDefinition) - 1) {
-                    $request->route = new Route($routeDefinition, $routeParameters);
+                if ($elementIterator == count($explodedDefinition) - 1) {
+                    $request->route             = new Route($routeDefinition, $routeParameters);
                     $className                  = $routeEntry['path']['classname'];
                     $callableMethod             = $routeEntry['path']['callablemethod'];
                     $routeControllerInformation = new RouteControllerInformation($className, $callableMethod);
@@ -59,6 +59,11 @@ class Routing
             $notFoundCallableMethod);
 
         return $notFoundRouteControllerInformation;
+    }
+
+    private function definitionElementIsParameter($element)
+    {
+        return (strpos($element, '{') !== false && strpos($element, '}') !== false);
     }
 }
 
