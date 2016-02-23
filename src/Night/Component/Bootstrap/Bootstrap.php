@@ -2,6 +2,7 @@
 
 namespace Night\Component\Bootstrap;
 
+use Night\Component\Container\ServicesContainer;
 use Night\Component\Controller\NightController;
 use Night\Component\FileParser\FileParserFactory;
 use Night\Component\Request\Request;
@@ -16,6 +17,7 @@ class Bootstrap
     const NIGHT_DEVELOPMENT_ENVIRONMENT = 'dev';
 
     private $generalConfigurations;
+    private $container;
 
     const REQUEST_PARAM_NAME = 'request';
 
@@ -28,12 +30,16 @@ class Bootstrap
 
     public function __invoke(Request $request)
     {
-        $fileParser = FileParserFactory::getParser($this->generalConfigurations['configurationsFileExtension']);
-
+        $fileParser                  = FileParserFactory::getParser($this->generalConfigurations['configurationsFileExtension']);
         $configurationsDirectory     = $this->generalConfigurations['configurationsDirectory'];
         $configurationsFileExtension = $this->generalConfigurations['configurationsFileExtension'];
-        $routingFile                 = $configurationsDirectory . '/routing.' . $configurationsFileExtension;
-        $routing                     = new Routing($fileParser);
+
+        $servicesFile      = $configurationsDirectory . '/services.' . $configurationsFileExtension;
+        $servicesContainer = new ServicesContainer($fileParser, $servicesFile);
+        $this->container   = $servicesContainer;
+
+        $routingFile = $configurationsDirectory . '/routing.' . $configurationsFileExtension;
+        $routing     = $servicesContainer->getService('routing');
 
         $routeControllerInformation = $routing->parseRoute($request, $routingFile);
 
@@ -64,9 +70,7 @@ class Bootstrap
     {
         switch ($this->generalConfigurations['templating']['engine']) {
             case TwigTemplating::ENGINE:
-                $twig_loader = new \Twig_Loader_Filesystem($this->generalConfigurations['templating']['templatesDirectory']);
-                $twig        = new \Twig_Environment($twig_loader);
-                $templating  = new TwigTemplating($twig);
+                $templating  = $this->container->getService('twig-templating');
                 break;
             case SmartyTemplating::ENGINE:
                 $smarty = new \Smarty();
