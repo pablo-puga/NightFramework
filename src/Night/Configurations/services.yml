@@ -1,0 +1,11 @@
+json-parser:
+  class: \Night\Component\FileParser\JSONParser
+symfony-yaml:
+  class: \Symfony\Component\Yaml\Yaml
+  public: false
+yaml-parser:
+  class: \Night\Component\FileParser\YAMLParser
+  arguments:
+    - @symfony-yaml
+php-parser:
+  class: \Night\Component\FileParser\PHPParser
