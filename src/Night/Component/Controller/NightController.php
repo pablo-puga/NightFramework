@@ -4,24 +4,11 @@ namespace Night\Component\Controller;
 
 
 use Night\Component\Container\ServicesContainer;
-use Night\Component\Templating\Templating;
 
 abstract class NightController
 {
-    /** @var  Templating */
-    private $templating;
     /** @var  ServicesContainer */
     private $servicesContainer;
-
-    public function setTemplating(Templating $templating)
-    {
-        $this->templating = $templating;
-    }
-
-    public function getTemplatingService()
-    {
-        return clone $this->templating;
-    }
 
     public function setServicesContainer(ServicesContainer $servicesContainer)
     {
