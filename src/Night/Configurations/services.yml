@@ -9,3 +9,11 @@ yaml-parser:
     - @symfony-yaml
 php-parser:
   class: \Night\Component\FileParser\PHPParser
+smarty-templating:
+  class: \Night\Component\Templating\SmartyTemplating
+  arguments:
+    - @yaml-parser
+twig-templating:
+  class: \Night\Component\Templating\TwigTemplating
+  arguments:
+    - @yaml-parser
