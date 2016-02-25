@@ -40,21 +40,22 @@ class ServicesContainer
                 $serviceArguments[] = $this->getService(str_replace('@', '', $argument));
             }
             $serviceReflector = new \ReflectionClass($serviceDefinition['class']);
-            $service = $serviceReflector->newInstanceArgs($serviceArguments);
+            $service          = $serviceReflector->newInstanceArgs($serviceArguments);
         } else {
             $serviceReflector = new \ReflectionClass($serviceDefinition['class']);
-            $service = $serviceReflector->newInstance();
+            $service          = $serviceReflector->newInstance();
         }
         return $service;
     }
 
-    private function isCalledFromGetServiceMethod($methodName) {
+    private function isCalledFromGetServiceMethod($methodName)
+    {
         $backTrace = debug_backtrace();
 
         $caller = null;
         if (count($backTrace) > 3) {
             $backTrace = $backTrace[2];
-            $caller = $backTrace['function'];
+            $caller    = $backTrace['function'];
         }
 
         if (is_null($caller)) {
@@ -66,6 +67,19 @@ class ServicesContainer
         }
 
         return true;
+    }
+
+    public function getServicesByTag($tagName)
+    {
+        $tagServices = [];
+        foreach ($this->servicesDefinitions as $service => $serviceDefinition) {
+            if (array_key_exists('tags', $serviceDefinition)) {
+                if (array_search($tagName, $serviceDefinition['tags']) >= 0) {
+                    $tagServices[] = $this->getService($service);
+                }
+            }
+        }
+        return $tagServices;
     }
 }
 
