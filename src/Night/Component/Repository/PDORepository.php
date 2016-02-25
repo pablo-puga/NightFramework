@@ -56,7 +56,7 @@ class PDORepository
 
     public function executeStatement()
     {
-        $this->currentQuery->execute();
+        return $this->currentQuery->execute();
     }
 
     public function getResults()
