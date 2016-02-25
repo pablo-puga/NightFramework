@@ -5,11 +5,17 @@ namespace Night\Component\Request;
 
 class Request
 {
+    /** @var \Night\Component\Request\Server */
     public $server;
+    /** @var \Night\Component\Request\Session */
     public $session;
+    /** @var \Night\Component\Request\Cookie */
     public $cookie;
+    /** @var \Night\Component\Request\Get */
     public $get;
+    /** @var \Night\Component\Request\Post */
     public $post;
+    /** @var \Night\Component\Request\Route */
     public $route;
 
     private function __construct(Array $server, Array $session, Array $cookie, Array $get, Array $post)
