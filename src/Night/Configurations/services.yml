@@ -17,3 +17,7 @@ twig-templating:
   class: \Night\Component\Templating\TwigTemplating
   arguments:
     - @yaml-parser
+pdo-repository:
+  class: \Night\Component\Repository\PDORepository
+  arguments:
+    - @yaml-parser
