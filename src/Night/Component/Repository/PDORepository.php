@@ -63,5 +63,10 @@ class PDORepository
     {
         return $this->currentQuery->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getLastInsertedId()
+    {
+        return $this->pdo->lastInsertId();
+    }
 }
 
