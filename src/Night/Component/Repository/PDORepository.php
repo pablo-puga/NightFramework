@@ -5,6 +5,7 @@ namespace Night\Component\Repository;
 
 use Night\Component\Bootstrap\Bootstrap;
 use Night\Component\FileParser\FileParser;
+use Night\Component\Profiling\PDORepositoryProfiler;
 use PDO;
 
 class PDORepository
@@ -17,6 +18,8 @@ class PDORepository
     private $pdo;
     /** @var  \PDOStatement */
     private $currentQuery;
+    private $currentStatement;
+    private $currentParams = [];
 
     public function __construct(FileParser $fileParser)
     {
@@ -46,17 +49,28 @@ class PDORepository
 
     public function setStatement($statemet)
     {
-        $this->currentQuery = $this->pdo->prepare($statemet);
+        $this->currentStatement = $statemet;
     }
 
     public function setParam($param, $value, $type)
     {
-        $this->currentQuery->bindParam($param, $value, $type);
+        $this->currentParams[$param] = [
+            'value' => $value,
+            'type' => $type
+        ];
     }
 
     public function executeStatement()
     {
-        return $this->currentQuery->execute();
+        $this->currentQuery = $this->pdo->prepare($this->currentStatement);
+        foreach($this->currentParams as $param => $info) {
+            $this->currentQuery->bindParam($param, $info['value'], $info['type']);
+        }
+        $result = $this->currentQuery->execute();
+        /** @var PDORepositoryProfiler $profiler */
+        $profiler = PDORepositoryProfiler::getInstance();
+        $profiler->addTrace($this->currentStatement, $this->currentParams, $result, $this->getErrorInfo());
+        return $result;
     }
 
     public function getResults()
