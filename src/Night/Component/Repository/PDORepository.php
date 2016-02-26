@@ -68,5 +68,10 @@ class PDORepository
     {
         return $this->pdo->lastInsertId();
     }
+
+    public function getErrorInfo()
+    {
+        return $this->currentQuery->errorInfo();
+    }
 }
 
