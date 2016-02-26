@@ -30,6 +30,9 @@ class ServicesContainer
                 return null;
             }
         }
+        if (array_key_exists('singleton', $serviceDefinition)) {
+            return $serviceDefinition['class']::{$serviceDefinition['singleton']}();
+        }
         if (array_key_exists('arguments', $serviceDefinition)) {
             $serviceArguments = [];
             foreach ($serviceDefinition['arguments'] as $argument) {
