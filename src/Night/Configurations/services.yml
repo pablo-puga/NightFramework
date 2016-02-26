@@ -21,3 +21,8 @@ pdo-repository:
   class: \Night\Component\Repository\PDORepository
   arguments:
     - @yaml-parser
+pdo-repository-profiler:
+  class: \Night\Component\Profiling\PDORepositoryProfiler
+  tags:
+    - profiler
+  singleton: getInstance
