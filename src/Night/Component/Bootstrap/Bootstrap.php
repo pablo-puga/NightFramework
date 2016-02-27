@@ -2,11 +2,14 @@
 
 namespace Night\Component\Bootstrap;
 
+use Night\Component\Bootstrap\Exception\InvalidResponse;
 use Night\Component\Container\ServicesContainer;
 use Night\Component\Controller\NightController;
 use Night\Component\FileParser\FileParserFactory;
 use Night\Component\FileParser\YAMLParser;
+use Night\Component\Profiling\Profiler;
 use Night\Component\Request\Request;
+use Night\Component\Response\Response;
 use Night\Component\Routing\RouteControllerInformation;
 use NightStandardEdition\Controller\ComplexController;
 use ReflectionClass;
@@ -31,14 +34,17 @@ class Bootstrap
 
     public function __invoke(Request $request)
     {
-
+        $initTime          = microtime(true);
         $servicesFile      = $this->configurationsDirectoryPath . '/services.yml';
         $fileParser        = FileParserFactory::getParser(YAMLParser::FILE_EXTENSION);
         $servicesContainer = new ServicesContainer($fileParser, $servicesFile);
         $this->container   = $servicesContainer;
+        if (Profiler::getState()) {
+            Profiler::getInstance()->setContainer($this->container);
+        }
 
-        $routingFile                = $this->configurationsDirectoryPath . '/routing.' . $this->generalConfigurations['routingFileExtension'];
-        $routing                    = $this->container->getService('routing');
+        $routingFile = $this->configurationsDirectoryPath . '/routing.' . $this->generalConfigurations['routingFileExtension'];
+        $routing     = $this->container->getService('routing');
         /** @var RouteControllerInformation $routeControllerInformation */
         $routeControllerInformation = $routing->parseRoute($request, $routingFile);
 
@@ -52,12 +58,22 @@ class Bootstrap
             $controller->setServicesContainer($servicesContainer);
         }
 
+        /** @var Response $response */
         if ($this->controllerNeedsRequest($controllerClassName, $controllerCallableMethod)) {
             $response = $controller->{$controllerCallableMethod}($request);
         } else {
             $response = $controller->{$controllerCallableMethod}();
         }
 
+        if (is_null($response)) {
+            InvalidResponse::throwDefault();
+        }
+        $endTime = microtime(true);
+        if (Profiler::getState()) {
+            $executionTime = $this->calcExecutionDuration($initTime, $endTime);
+            Profiler::getInstance()->setResponseStatus($response->getStatus());
+            Profiler::getInstance()->setExecutionDuration($executionTime);
+        }
         return $response;
     }
 
@@ -77,6 +93,25 @@ class Bootstrap
         }
 
         return false;
+    }
+
+    private function calcExecutionDuration($initTime, $endTime)
+    {
+        $diffSeconds = $endTime - $initTime;
+        $intPart     = floor($diffSeconds);
+        if ($intPart == 0) {
+            $diffMiliseconds = $diffSeconds * 1000;
+            $intPart         = floor($diffMiliseconds);
+            if ($intPart == 0) {
+                $diffMicroseconds = $diffMiliseconds * 1000;
+                $execDuration     = round($diffMicroseconds, 5, PHP_ROUND_HALF_UP) . " µs";
+            } else {
+                $execDuration = round($diffMiliseconds, 5, PHP_ROUND_HALF_UP) . " ms";
+            }
+        } else {
+            $execDuration = round($diffSeconds, 5, PHP_ROUND_HALF_UP) . " s";
+        }
+        return $execDuration;
     }
 }
 
