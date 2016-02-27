@@ -29,3 +29,8 @@ pdo-repository-profiler:
   tags:
     - profiler-component
   singleton: getInstance
+routing-profiler:
+  class: \Night\Component\Profiling\RoutingProfiler
+  tags:
+    - profiler-component
+  singleton: getInstance
