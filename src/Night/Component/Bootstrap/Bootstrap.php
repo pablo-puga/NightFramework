@@ -43,9 +43,8 @@ class Bootstrap
     public function __invoke(Request $request)
     {
         $initTime          = microtime(true);
-        $servicesFile      = $this->configurationsDirectoryPath . '/services.yml';
         $fileParser        = FileParserFactory::getParser(YAMLParser::FILE_EXTENSION);
-        $servicesContainer = new ServicesContainer($fileParser, $servicesFile);
+        $servicesContainer = new ServicesContainer($fileParser);
         $this->container   = $servicesContainer;
         if (Profiler::getState()) {
             Profiler::getInstance()->setContainer($this->container);
