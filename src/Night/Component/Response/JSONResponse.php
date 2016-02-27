@@ -5,13 +5,16 @@ namespace Night\Component\Response;
 
 class JSONResponse extends Response
 {
-    public function __construct()
+    private $charset;
+
+    public function setCharset($charset)
     {
-        parent::setContentType('application/json');
+        $this->charset = $charset;
     }
 
     public function setContent($responseContent)
     {
+        parent::setContentType("application/json".((isset($this->charset) ? "; charset=$this->charset" : "")));
         $jsonContent = json_encode($responseContent);
         parent::setContent($jsonContent);
     }
