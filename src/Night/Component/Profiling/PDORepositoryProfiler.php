@@ -19,7 +19,12 @@ final class PDORepositoryProfiler extends ProfilerComponent
 
     public function getProfilingData()
     {
-        $html = '<table><tr><th colspan="3">PDO REPOSITORY PROFILING INFORMATION</th></tr>';
+        if (empty($this->traces)) {
+            return null;
+        }
+        $html = '<table><tr class="table-title"><th colspan="3" style="text-align: center">PDO REPOSITORY PROFILING INFORMATION</th></tr>';
+        $html .= '<tr class="table-columns-definition"><th style="width: 55px;">Query Nb</th><th style="width: 70px;">Field</th><th>Value</th></tr>';
+        $html .= '<tr class="empty"><td colspan="3"></td></tr>';
         foreach ($this->traces as $key => $trace) {
             $key = $key + 1;
             $traceHtml = "<tr><td>$key</td><td>Statement:</td><td>".$trace['statement']."</td></tr>";
@@ -33,7 +38,7 @@ final class PDORepositoryProfiler extends ProfilerComponent
                 $error = 'SQLESTATE: '.$trace['error'][0].'<br> MYSQLSTATE: '.$trace['error'][1].'<br> MSG: '.$trace['error'][2];
                 $traceHtml .= "<tr><td>$key</td><td>    Errors:</td><td>$error</td></tr>";
             }
-            $traceHtml .= '<tr><td colspan="3" class="empty"></td></tr>';
+            $traceHtml .= '<tr class="empty"><td colspan="3"></td></tr>';
             $html .= $traceHtml;
         }
         return $html.'</table>';
