@@ -6,6 +6,7 @@ namespace Night\Component\Repository;
 use Night\Component\Bootstrap\Bootstrap;
 use Night\Component\FileParser\FileParser;
 use Night\Component\Profiling\PDORepositoryProfiler;
+use Night\Component\Profiling\Profiler;
 use PDO;
 
 class PDORepository
@@ -67,9 +68,12 @@ class PDORepository
             $this->currentQuery->bindParam($param, $info['value'], $info['type']);
         }
         $result = $this->currentQuery->execute();
-        /** @var PDORepositoryProfiler $profiler */
-        $profiler = PDORepositoryProfiler::getInstance();
-        $profiler->addTrace($this->currentStatement, $this->currentParams, $result, $this->getErrorInfo());
+
+        if (Profiler::getState()) {
+            /** @var PDORepositoryProfiler $profiler */
+            $profiler = PDORepositoryProfiler::getInstance();
+            $profiler->addTrace($this->currentStatement, $this->currentParams, $result, $this->getErrorInfo());
+        }
         return $result;
     }
 
