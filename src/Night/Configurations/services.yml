@@ -34,3 +34,7 @@ routing-profiler:
   tags:
     - profiler-component
   singleton: getInstance
+translator:
+  class: \Night\Component\i18n\Translator
+  arguments:
+      - @yaml-parser
