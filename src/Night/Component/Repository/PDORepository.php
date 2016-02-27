@@ -30,7 +30,8 @@ class PDORepository
         $database                 = $pdoConnectionSettings['database'];
         $user                     = $pdoConnectionSettings['user'];
         $password                 = $pdoConnectionSettings['password'];
-        $this->pdo                = new PDO("mysql:host={$host};dbname={$database}", $user, $password);
+        $charset                  = $pdoConnectionSettings['charset'];
+        $this->pdo                = new PDO("mysql:host={$host};dbname={$database};charset={$charset}", $user, $password);
     }
 
     public function beginTransaction()
