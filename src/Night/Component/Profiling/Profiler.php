@@ -39,10 +39,12 @@ document.querySelector('.profiler-panel-expander').addEventListener('click', fun
         event.target.innerHTML = '-';
         document.querySelector('.profiler-panel').style.height = '95%';
         document.querySelector('.profiler-panel-components-holder').style.opacity = '1';
+        document.querySelector('.profiler-panel-components-holder').style.overflow = 'auto';
     } else if (innerHTML == '-') {
         event.target.innerHTML = '+';
         document.querySelector('.profiler-panel').style.height = '30px';
         document.querySelector('.profiler-panel-components-holder').style.opacity = '0';
+        document.querySelector('.profiler-panel-components-holder').style.overflow = 'hidden';
     }
 });
 </script>
