@@ -2,6 +2,7 @@
 
 namespace Night\Component\Bootstrap;
 
+use Night\Component\Bootstrap\Exception\InvalidEnvironment;
 use Night\Component\Bootstrap\Exception\InvalidResponse;
 use Night\Component\Container\ServicesContainer;
 use Night\Component\Controller\NightController;
@@ -11,7 +12,6 @@ use Night\Component\Profiling\Profiler;
 use Night\Component\Request\Request;
 use Night\Component\Response\Response;
 use Night\Component\Routing\RouteControllerInformation;
-use NightStandardEdition\Controller\ComplexController;
 use ReflectionClass;
 
 class Bootstrap
@@ -19,10 +19,13 @@ class Bootstrap
     private $generalConfigurations;
     private $container;
     private $configurationsDirectoryPath;
+    public static $environment;
 
     const REQUEST_PARAM_NAME = 'request';
     const REQUEST_CLASS_NAME = 'Night\Component\Request\Request';
     const CONFIGURATIONS_DIRECTORY = 'app/confs';
+    const PRODUCTION_ENVIRONMENT = 'prod';
+    const DEVELOPMENT_ENVIRONMENT = 'dev';
 
     public function __construct()
     {
@@ -30,6 +33,11 @@ class Bootstrap
         $fileParser                        = FileParserFactory::getParser(YAMLParser::FILE_EXTENSION);
         $generalConfigurationFile          = $this->configurationsDirectoryPath . '/general.yml';
         $this->generalConfigurations       = $fileParser->parseFile($generalConfigurationFile)['general'];
+        $environment = $this->generalConfigurations['environment'];
+        if ($this->environmentIsValid($environment)) {
+            InvalidEnvironment::throwDefault($environment);
+        }
+        self::$environment = $environment;
     }
 
     public function __invoke(Request $request)
@@ -112,6 +120,11 @@ class Bootstrap
             $execDuration = round($diffSeconds, 5, PHP_ROUND_HALF_UP) . " s";
         }
         return $execDuration;
+    }
+
+    private function environmentIsValid($environment)
+    {
+        return $environment != self::PRODUCTION_ENVIRONMENT && $environment != self::DEVELOPMENT_ENVIRONMENT;
     }
 }
 
