@@ -3,6 +3,7 @@
 namespace Night\Component\Response;
 
 
+use Night\Component\Profiling\Profiler;
 use Night\Component\Response\Exception\InvalidRedirectCode;
 
 class Response
@@ -71,6 +72,14 @@ class Response
     {
         $this->sendHeaders();
         $this->sendContent();
+        if (Profiler::getState()) {
+            echo Profiler::getInstance()->getProfilerHTMLPanel();
+        }
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
     }
 }
 
