@@ -3,9 +3,12 @@
 namespace Night\Component\Request\Exception;
 
 
-class InvalidRequestParam extends \InvalidArgumentException
+use Exception;
+use InvalidArgumentException;
+
+class InvalidRequestParam extends InvalidArgumentException
 {
-    public function __construct($message, $code, \Exception $previous = null)
+    public function __construct($message, $code, Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

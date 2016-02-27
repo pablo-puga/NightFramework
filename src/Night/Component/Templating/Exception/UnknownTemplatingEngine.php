@@ -3,9 +3,12 @@
 namespace Night\Component\Templating\Exception;
 
 
-class UnknownTemplatingEngine extends \InvalidArgumentException
+use Exception;
+use InvalidArgumentException;
+
+class UnknownTemplatingEngine extends InvalidArgumentException
 {
-    public function __construct($message, $code, \Exception $previous = null)
+    public function __construct($message, $code, Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

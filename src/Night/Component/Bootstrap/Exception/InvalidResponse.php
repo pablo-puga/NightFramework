@@ -3,11 +3,12 @@
 namespace Night\Component\Bootstrap\Exception;
 
 
+use Exception;
 use MongoDB\Driver\Exception\InvalidArgumentException;
 
 class InvalidResponse extends InvalidArgumentException
 {
-    public function __construct($message, $code, \Exception $previous = null)
+    public function __construct($message, $code, Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

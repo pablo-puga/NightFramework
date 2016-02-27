@@ -3,9 +3,12 @@
 namespace Night\Component\FileParser\Exception;
 
 
-class InvalidConfigurationFileExtension extends \InvalidArgumentException
+use Exception;
+use InvalidArgumentException;
+
+class InvalidConfigurationFileExtension extends InvalidArgumentException
 {
-    public function __construct($message, $code, \Exception $previous = null)
+    public function __construct($message, $code, Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }
