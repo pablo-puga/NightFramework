@@ -52,6 +52,7 @@ class PDORepository
     public function setStatement($statemet)
     {
         $this->currentStatement = $statemet;
+        $this->currentParams = [];
     }
 
     public function setParam($param, $value, $type)
