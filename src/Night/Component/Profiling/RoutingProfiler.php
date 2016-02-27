@@ -41,10 +41,10 @@ class RoutingProfiler extends ProfilerComponent
 <table>
     <tr class="table-title"><th colspan="2" style="text-align: center">ROUTING PROFILING INFORMATION</th></tr>
     <tr class="empty"><td colspan="2"></td></tr>
-    <tr><td>Requested URI:</td><td>$this->requestedUri</td></tr>
-    <tr><td>Matched Route:</td><td>$this->matchedDefinition</td></tr>
-    <tr><td>Parameters: </td><td>$parameters</td></tr>
-    <tr><td>Parsing Duration: </td><td>$this->parsingTime</td>
+    <tr><td style="width: 100px;">Requested URI:</td><td>$this->requestedUri</td></tr>
+    <tr><td style="width: 100px;">Matched Route:</td><td>$this->matchedDefinition</td></tr>
+    <tr><td style="width: 100px;">Parameters: </td><td>$parameters</td></tr>
+    <tr><td style="width: 100px;">Parsing Duration: </td><td>$this->parsingTime</td>
 </table>
 __HTML__;
         return $html;
