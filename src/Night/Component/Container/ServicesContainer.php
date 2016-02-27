@@ -3,22 +3,35 @@
 namespace Night\Component\Container;
 
 
+use Night\Component\Bootstrap\Bootstrap;
 use Night\Component\FileParser\FileParser;
 
 class ServicesContainer
 {
-    private $coreServicesFile = __DIR__ . '/../../Configurations/services.yml';
     private $servicesDefinitions;
 
-    public function __construct(FileParser $fileParser, $servicesFiles)
+    public function __construct(FileParser $fileParser)
     {
-        $this->servicesDefinitions = $fileParser->parseFile($this->coreServicesFile);
-        $userServicesDefinitions   = $fileParser->parseFile($servicesFiles);
-        if (empty($userServicesDefinitions)) {
+        $coreServicesFile = __DIR__ . '/../../Configurations/services.yml';
+        $userGeneralServicesFile     = '../' . Bootstrap::CONFIGURATIONS_DIRECTORY . '/services.yml';
+        $userEnvironmentServicesFile = '../' . Bootstrap::CONFIGURATIONS_DIRECTORY . '/services_' . Bootstrap::$environment . '.yml';
+
+        $this->servicesDefinitions      = $fileParser->parseFile($coreServicesFile);
+        $userGeneralServicesDefinitions = $fileParser->parseFile($userGeneralServicesFile);
+        if (empty($userGeneralServicesDefinitions)) {
             return;
         }
-        foreach ($userServicesDefinitions as $service => $definition) {
+        foreach ($userGeneralServicesDefinitions as $service => $definition) {
             $this->servicesDefinitions[$service] = $definition;
+        }
+        if (file_exists($userEnvironmentServicesFile)) {
+            $userEnvironmentServicesDefinitions = $fileParser->parseFile($userEnvironmentServicesFile);
+            if (empty($userEnvironmentServicesDefinitions)) {
+                return;
+            }
+            foreach ($userEnvironmentServicesDefinitions as $service => $definition) {
+                $this->servicesDefinitions[$service] = $definition;
+            }
         }
     }
 
