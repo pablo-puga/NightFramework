@@ -3,6 +3,8 @@
 namespace Night\Component\Routing;
 
 use Night\Component\FileParser\FileParser;
+use Night\Component\Profiling\Profiler;
+use Night\Component\Profiling\RoutingProfiler;
 use Night\Component\Request\Request;
 use Night\Component\Request\Route;
 
@@ -12,11 +14,12 @@ class Routing
 
     public function __construct(FileParser $fileParser)
     {
-        $this->fileParser  = $fileParser;
+        $this->fileParser = $fileParser;
     }
 
     public function parseRoute(Request $request, $routingFile)
     {
+        $initTime        = microtime();
         $fileContents    = $this->fileParser->parseFile($routingFile);
         $routeParameters = [];
         $explodedRoute   = array_slice(explode('/', $request->getRequestUri()), 1);
@@ -46,22 +49,48 @@ class Routing
                     $className                  = $routeEntry['path']['classname'];
                     $callableMethod             = $routeEntry['path']['callablemethod'];
                     $routeControllerInformation = new RouteControllerInformation($className, $callableMethod);
-                    return $routeControllerInformation;
+                    break;
                 }
             }
         }
 
-        $notFoundClassName                  = $fileContents['notfound']['path']['classname'];
-        $notFoundCallableMethod             = $fileContents['notfound']['path']['callablemethod'];
-        $notFoundRouteControllerInformation = new RouteControllerInformation($notFoundClassName,
-            $notFoundCallableMethod);
+        if (!isset($routeControllerInformation)) {
+            $notFoundClassName          = $fileContents['notfound']['path']['classname'];
+            $notFoundCallableMethod     = $fileContents['notfound']['path']['callablemethod'];
+            $routeControllerInformation = new RouteControllerInformation($notFoundClassName, $notFoundCallableMethod);
+        }
 
-        return $notFoundRouteControllerInformation;
+        $endTime = microtime();
+        if (Profiler::getState()) {
+            $parsingDuration = $this->calcParsingDuration($initTime, $endTime);
+            RoutingProfiler::getInstance()->setInformation($request->getRequestUri(), $routeDefinition, $routeParameters, $parsingDuration);
+        }
+
+        return $routeControllerInformation;
     }
 
     private function definitionElementIsParameter($element)
     {
         return (strpos($element, '{') !== false && strpos($element, '}') !== false);
+    }
+
+    private function calcParsingDuration($initTime, $endTime)
+    {
+        $diffSeconds = $endTime - $initTime;
+        $intPart     = floor($diffSeconds);
+        if ($intPart == 0) {
+            $diffMiliseconds = $diffSeconds * 1000;
+            $intPart         = floor($diffMiliseconds);
+            if ($intPart == 0) {
+                $diffMicroseconds = $diffMiliseconds * 1000;
+                $execDuration     = round($diffMicroseconds, 5, PHP_ROUND_HALF_UP) . " µs";
+            } else {
+                $execDuration = round($diffMiliseconds, 5, PHP_ROUND_HALF_UP) . " ms";
+            }
+        } else {
+            $execDuration = round($diffSeconds, 5, PHP_ROUND_HALF_UP) . " s";
+        }
+        return $execDuration;
     }
 }
 
