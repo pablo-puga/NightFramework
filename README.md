@@ -187,6 +187,27 @@ return [
 ];
 ```
 
+###Sample of Front Controller
+```php
+<?php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Night\Component\Bootstrap\Bootstrap;
+use Night\Component\Profiling\Profiler;
+use Night\Component\Request\Request;
+
+$bootstrap = new Bootstrap();
+$request   = Request::newFromGlobals();
+
+//Profiler::enable(); //Uncomment to enable the Profiler
+
+/**@var $response \Night\Component\Response\Response */
+$response = $bootstrap($request);
+
+$response->send();
+```
+
 ### Services Container
 
 The container has access to a set of services already defined.
@@ -241,3 +262,4 @@ translator:
 
 If you want to define your own services, you can do it by creating the file services.yml (services_prod.yml and services_dev.yml for environment specific services) in the configurations folder following the same sintax as above. 
 >**Note:** If you want to overwrite a service it is enough to add a new entry to your services.yml with the same name of the service to overwrite.
+
