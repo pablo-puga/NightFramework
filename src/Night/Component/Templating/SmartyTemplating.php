@@ -5,6 +5,8 @@ namespace Night\Component\Templating;
 
 use Night\Component\Bootstrap\Bootstrap;
 use Night\Component\FileParser\FileParser;
+use Night\Component\Profiling\Profiler;
+use Night\Component\Profiling\TemplatingProfiler;
 use Smarty;
 
 class SmartyTemplating implements Templating
@@ -46,6 +48,18 @@ class SmartyTemplating implements Templating
     {
         $this->smarty->assign($this->variables);
         $template = $this->smarty->fetch($this->template);
+        if (Profiler::getState()) {
+            $templatingProfiler = TemplatingProfiler::getInstance();
+            $templatingProfiler->setRenderingInformation(
+                self::ENGINE,
+                $this->smarty->getTemplateDir()[0],
+                $this->template,
+                $this->variables,
+                ($this->smarty->caching == Smarty::CACHING_OFF ? false : true),
+                $this->smarty->getCacheDir(),
+                $this->smarty->isCached($this->template)
+            );
+        }
         return $template;
     }
 }

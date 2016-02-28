@@ -5,6 +5,8 @@ namespace Night\Component\Templating;
 
 use Night\Component\Bootstrap\Bootstrap;
 use Night\Component\FileParser\FileParser;
+use Night\Component\Profiling\Profiler;
+use Night\Component\Profiling\TemplatingProfiler;
 use Twig_Environment;
 use Twig_Loader_Filesystem;
 
@@ -45,6 +47,18 @@ class TwigTemplating implements Templating
 
     public function render()
     {
+        if (Profiler::getState()) {
+            $templatingProfiler = TemplatingProfiler::getInstance();
+            $templatingProfiler->setRenderingInformation(
+                self::ENGINE,
+                $this->twig->getLoader()->getPaths()[0],
+                $this->template,
+                $this->variables,
+                ($this->twig->getCache() ? true : false),
+                $this->twig->getCache(),
+                ($this->twig->getCacheFilename($this->template) ? true : false)
+            );
+        }
         return $this->twig->render($this->template, $this->variables);
     }
 }
