@@ -105,7 +105,7 @@ __HTML__;
         foreach ($profilers as $profilerComponent) {
             $profilingData = $profilerComponent->getProfilingData();
             if (!is_null($profilingData)) {
-                $html .= $profilingData;
+                $html .= $profilingData."<br><br>";
             }
         }
         $html .= '</div></div>';
