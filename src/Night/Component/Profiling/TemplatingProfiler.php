@@ -53,8 +53,10 @@ class TemplatingProfiler extends ProfilerComponent
             $html .= "<tr><td>$tplNb</td><td>Templates Directory:</td><td>".$templateInfo['templatesDir']."</td></tr>";
             $html .= "<tr><td>$tplNb</td><td>Rendered Template:</td><td>".$templateInfo['template']."</td></tr>";
             $params = "";
-            foreach($templateInfo['params'] as $param => $value) {
-                $params .= "[$param]: $value<br>";
+            if (!empty($templateInfo['params'])) {
+                foreach($templateInfo['params'] as $param => $value) {
+                    $params .= "[$param]: $value<br>";
+                }
             }
             if (empty($params)) $params = 'None';
             $html .= "<tr><td>$tplNb</td><td>Parameters:</td><td>$params</td></tr>";
