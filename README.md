@@ -35,8 +35,8 @@ $container = $this->getServicesContainer();
 ```
  - Two different templating engines, **Twig** and **Smarty**.
 ```php
-$twig-templating = $container->getService('twig-templating');
-$smarty-templating = $container->getService('smarty-templating');
+$twigTemplating = $container->getService('twig-templating');
+$smartyTemplating = $container->getService('smarty-templating');
 ```
  - It supports **prod** and **dev** environments.
  - A **Translator** service
@@ -55,7 +55,7 @@ public function myControllerAction(Request $request) {
 	  **Note: ** Every action method **MUST** return one response, otherwise it will throw an exception.
  - The **PDORepository** is a simpple interface to access your database.
 ```php
-$pdo-repository = $container->getService('pdo-repository');
+$pdoRepository = $container->getService('pdo-repository');
 ```
 
 Framework Requirements
