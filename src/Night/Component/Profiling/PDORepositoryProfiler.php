@@ -18,13 +18,14 @@ final class PDORepositoryProfiler extends ProfilerComponent
         return self::$instance;
     }
 
-    public function addTrace($statement, Array $variables, $result, $error)
+    public function addTrace($statement, Array $variables, $result, $error, $executionTime)
     {
         $this->traces[] = [
             'statement' => $statement,
             'variables' => $variables,
             'result' => $result,
-            'error' => $error
+            'error' => $error,
+            'executionTime' => $executionTime
         ];
     }
 
@@ -50,6 +51,7 @@ final class PDORepositoryProfiler extends ProfilerComponent
                 $error = 'SQLESTATE: '.$trace['error'][0].'<br> MYSQLSTATE: '.$trace['error'][1].'<br> MSG: '.$trace['error'][2];
                 $traceHtml .= "<tr><td>$key</td><td>    Errors:</td><td>$error</td></tr>";
             }
+            $traceHtml .= "<tr><td>$key</td><td>    Exec Time:</td><td>".$trace['executionTime']."</td></tr>";
             $traceHtml .= '<tr class="empty"><td colspan="3"></td></tr>';
             $html .= $traceHtml;
         }
