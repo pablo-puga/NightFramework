@@ -43,3 +43,7 @@ translator:
   class: \Night\Component\i18n\Translator
   arguments:
       - @yaml-parser
+routing:
+  class: \Night\Component\Routing\Routing
+  arguments:
+    - @yaml-parser
