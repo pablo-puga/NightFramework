@@ -111,7 +111,7 @@ class Bootstrap
             $intPart         = floor($diffMiliseconds);
             if ($intPart == 0) {
                 $diffMicroseconds = $diffMiliseconds * 1000;
-                $execDuration     = round($diffMicroseconds, 5, PHP_ROUND_HALF_UP) . " µs";
+                $execDuration     = round($diffMicroseconds, 5, PHP_ROUND_HALF_UP) . " &#181;s";
             } else {
                 $execDuration = round($diffMiliseconds, 5, PHP_ROUND_HALF_UP) . " ms";
             }
