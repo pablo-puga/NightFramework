@@ -34,6 +34,11 @@ routing-profiler:
   tags:
     - profiler-component
   singleton: getInstance
+templating-profiler:
+  class: \Night\Component\Profiling\TemplatingProfiler
+  tags:
+    - profiler-component
+  singleton: getInstance
 translator:
   class: \Night\Component\i18n\Translator
   arguments:
