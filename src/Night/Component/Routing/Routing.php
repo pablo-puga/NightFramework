@@ -49,7 +49,7 @@ class Routing
                     $className                  = $routeEntry['path']['classname'];
                     $callableMethod             = $routeEntry['path']['callablemethod'];
                     $routeControllerInformation = new RouteControllerInformation($className, $callableMethod);
-                    break;
+                    break 2;
                 }
             }
         }
@@ -58,6 +58,7 @@ class Routing
             $notFoundClassName          = $fileContents['notfound']['path']['classname'];
             $notFoundCallableMethod     = $fileContents['notfound']['path']['callablemethod'];
             $routeControllerInformation = new RouteControllerInformation($notFoundClassName, $notFoundCallableMethod);
+            $routeDefinition            = 'Default Not Found';
         }
 
         $endTime = microtime();
@@ -83,7 +84,7 @@ class Routing
             $intPart         = floor($diffMiliseconds);
             if ($intPart == 0) {
                 $diffMicroseconds = $diffMiliseconds * 1000;
-                $execDuration     = round($diffMicroseconds, 5, PHP_ROUND_HALF_UP) . " µs";
+                $execDuration     = round($diffMicroseconds, 5, PHP_ROUND_HALF_UP) . " &#181;s";
             } else {
                 $execDuration = round($diffMiliseconds, 5, PHP_ROUND_HALF_UP) . " ms";
             }
