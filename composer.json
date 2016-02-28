@@ -3,6 +3,12 @@
   "description": "MPWAR Framework",
   "license": "Apache-2.0",
   "keywords": [],
+  "authors": [
+     {
+        "name": "Pablo Puga Peralta",
+        "email": "pablo.puga.git@gmail.com"
+     }
+  ],
   "homepage": "https://github.com/pablo-puga/NightFramework",
   "type": "project",
   "require": {
