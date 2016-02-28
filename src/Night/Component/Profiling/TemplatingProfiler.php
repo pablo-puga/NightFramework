@@ -55,7 +55,7 @@ class TemplatingProfiler extends ProfilerComponent
             $params = "";
             if (!empty($templateInfo['params'])) {
                 foreach($templateInfo['params'] as $param => $value) {
-                    $params .= "[$param]: $value<br>";
+                    $params .= "[$param]: ".print_r($value, true)."<br>";
                 }
             }
             if (empty($params)) $params = 'None';
